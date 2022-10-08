@@ -1,5 +1,13 @@
+// This is the main file for the frontend, where all the components are plumbed together.
+// In React, there are two different ways of writing code - either as OOP via class 
+// definitions, or as functional components. 
+// This file uses the functional style, which can be recognized by the use of `useState`
+// definitions in the code.
+
+// Import basic definitions for React
 import React, { useState } from "react";
 import { render } from "react-dom";
+// Import components and icons from Ant Design
 import { Layout, Menu, Divider, Space } from "antd";
 import {
   FormOutlined,
@@ -8,13 +16,20 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 
+// Import CSS definitions
 import "antd/dist/antd.css";
 import "./index.css";
 
 const { Header, Content, Footer, Sider } = Layout;
 
+// This function generates the HTML output that defines the frontend page
 const App = () => {
-  const [selectedMenuItem, setSelectedMenuItem] = useState("Submit");
+  const [selectedMenuItem, setSelectedMenuItem] = useState("Submit"); // `useState` defines
+  // a new variable and a function for changing the variable. When this happens, any part of 
+  // the frontend that uses this variable is automatically updated.
+  // `useState` is used for functional code.
+
+  // This function changes the main content of the page based on the menu selection.
   const componentsSwitch = (key) => {
     switch (key) {
       case "Submit":
@@ -37,6 +52,9 @@ const App = () => {
     }
   };
 
+  // The return value is the HTML code for the frontend page. One can "switch over" to 
+  // Javascript code by putting it between {...} - see for example 
+  // `{componentsSwitch(selectedMenuItem)}`.
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -91,4 +109,6 @@ const App = () => {
   );
 };
 
+// This line puts the component defined in the function `App` into the root node of the 
+// webpage
 render(<App />, document.getElementById("root"));
