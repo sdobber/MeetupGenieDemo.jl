@@ -4,6 +4,8 @@
 
 import React, { Component } from "react";
 import { Form, Input, Select, Button, message } from "antd";
+import { Upload } from "antd";
+import { InboxOutlined } from "@ant-design/icons";
 
 class SubmitText extends Component {
     constructor(props) {
@@ -16,6 +18,7 @@ class SubmitText extends Component {
             },
             Files: [{ id: 1 }],
             Wordcount: 0,
+            Submissiontext: "",
             buttondisabled: false
         };
     }
@@ -69,6 +72,8 @@ class SubmitText extends Component {
             },
             body: JSON.stringify({
                 ...values.TS,
+                Wordcount: this.state.Wordcount,
+                Submissiontext: this.state.Submissiontext
             })
         }).then((res) => {
             if (!res.ok) {
@@ -84,6 +89,22 @@ class SubmitText extends Component {
     // Javascript allows to define functions in many different ways, however every variant
     // might have different scoping rules, not necessarily giving access to state variables
     // in `this.state`.
+    onFileUpload = (info) => {
+        const { status } = info.file;
+        if (status !== "uploading") {
+            this.setState({ Files: info.fileList });
+        }
+        if (status === "done") {
+            message.success(`${info.file.name} file analysed successfully.`);
+            this.setState({
+                Wordcount: info.file.response.Wordcount,
+                Submissiontext: info.file.response.Submissiontext
+            });
+        } else if (status === "error") {
+            message.error(`${info.file.name} file analysis failed.`);
+        }
+    };
+
     success = () => {
         message.success("Form Submitted", 5);
     };
@@ -95,7 +116,7 @@ class SubmitText extends Component {
     TextArea = Input;
 
     propsUpload = {
-        name: ["TS", "file"],
+        name: ["ST", "file"],
         multiple: false,
         action: this.props.api + "/filesubmit",
         method: "POST",
@@ -160,6 +181,44 @@ class SubmitText extends Component {
                         placeholder="Comment"
                         id="comment"
                     />
+                </Form.Item>
+
+                <Form.Item {...this.formItemLayout} label="Upload File">
+                    <Upload
+                        {...this.propsUpload}
+                        bodyStyle={{ backgroundColor: "#e6f7ff" }}
+                    >
+                        <p
+                            className="ant-upload-drag-icon"
+                            style={{
+                                fontSize: 30,
+                                color: "#40a9ff",
+                                textAlign: "center",
+                                backgroundColor: "#e6f7ff"
+                            }}
+                        >
+                            <InboxOutlined />
+                        </p>
+                        <p
+                            className="ant-upload-text"
+                            style={{
+                                color: "#40a9ff",
+                                textAlign: "center",
+                                backgroundColor: "#e6f7ff"
+                            }}
+                        >
+                            Click or drag files to this area to upload a text file.
+                        </p>
+                        <p className="ant-upload-hint"> </p>
+                    </Upload>
+                </Form.Item>
+
+                <Form.Item
+                    {...this.formItemLayout}
+                    label="Word Count"
+                    name={["TS", "WordCount"]}
+                >
+                    {this.state.Wordcount}
                 </Form.Item>
 
                 <Form.Item>
