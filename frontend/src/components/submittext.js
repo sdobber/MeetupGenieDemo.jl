@@ -1,6 +1,9 @@
+// This file creates a component that contains two dropdown menus and a comment textbox.
+// It uses the OOP style, which can be recognized by the `class` keyword and the use of
+// `this.state`.
+
 import React, { Component } from "react";
 import { Form, Input, Select, Button, message } from "antd";
-
 
 class SubmitText extends Component {
     constructor(props) {
@@ -39,6 +42,8 @@ class SubmitText extends Component {
         }
     };
 
+    // When the component is displayed on screen, this function queries the entries for the
+    // dropdown menus from the server.
     async getData() {
         const data = await fetch(this.props.api + "/getdata");
         const response = await data.json();
@@ -49,8 +54,13 @@ class SubmitText extends Component {
                 Users: response.Users,
             }
         });
+        // `this.setstate` is used for updating data stored in `this.state`. When this 
+        //happens, any part of  the frontend that uses this data is automatically updated.
     }
 
+    // When pressing the "Submit" button, this function collects the form entries and sends
+    // them to the server.
+    // Both this function and `getData` are asynchronous, and show different styles.
     onFinish = (values) => {
         fetch(this.props.api + "/formsubmit", {
             method: "POST",
@@ -70,6 +80,10 @@ class SubmitText extends Component {
         });
     };
 
+    // Stick to this general style of function definitions via `name = (var) => {}`.
+    // Javascript allows to define functions in many different ways, however every variant
+    // might have different scoping rules, not necessarily giving access to state variables
+    // in `this.state`.
     success = () => {
         message.success("Form Submitted", 5);
     };
@@ -97,6 +111,7 @@ class SubmitText extends Component {
     };
 
     render() {
+        // Make sure to only fetch the data once, instead of in an infinite loop.
         if (this.state.needsupdate) {
             this.getData();
         }
