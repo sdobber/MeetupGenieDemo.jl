@@ -24,9 +24,20 @@ route("/api/v1/submittext/formsubmit", method=POST) do
   comment = data["Comment"]
   user = data["User"]
   project = data["Project"]
-  wordcount = 0  # add later
-  text = ""  # add later
+  wordcount = data["Wordcount"]
+  text = data["Submissiontext"]
   Submission(userid=user, projectid=project, submissiontext=text,
-    wordcount=wordcount) |> save
+    wordcount=wordcount, comment=comment) |> save
   return nothing
+end
+
+route("/api/v1/submittext/filesubmit", method=POST) do
+  payload = filespayload()
+  filename = payload["ST,file"].name
+  text = String(payload["ST,file"].data)
+  words = split(text, (' ', '\n', '\t', '-', '.', ',', ':', '_', '"', ';', '!');
+    keepempty=false)
+  wordcount = length(words)
+  result = Dict("Wordcount" => wordcount, "Submissiontext" => text)
+  return json(result)
 end
