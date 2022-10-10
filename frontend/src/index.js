@@ -16,6 +16,9 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 
+// Import components
+import SubmitText from "./components/submittext";
+
 // Import CSS definitions
 import "antd/dist/antd.css";
 import "./index.css";
@@ -34,8 +37,8 @@ const App = () => {
     switch (key) {
       case "Submit":
         return (<div className="site-foreground"
-          style={{ width: 800, margin: "20px auto" }} >
-          <>Component 1</>
+          style={{ width: 600, margin: "20px auto" }} >
+          <SubmitText api={"/api/v1/submittext"} />
         </div >
         );
       case "ViewSubmissions":
