@@ -5,20 +5,23 @@
 // definitions in the code.
 
 // Import basic definitions for React
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { render } from "react-dom";
 // Import components and icons from Ant Design
-import { Layout, Menu, Divider, Space } from "antd";
+import { Layout, Menu, Divider, Space, message } from "antd";
 import {
   FormOutlined,
   EyeOutlined,
   PlaySquareOutlined,
   EditOutlined,
+  GiftOutlined,
+  AlertOutlined
 } from "@ant-design/icons";
 
 // Import components
 import SubmitText from "./components/submittext";
 import FilterTable from "./components/filtertable";
+import WebsocketDemo from "./components/websocketdemo";
 
 // Import CSS definitions
 import "antd/dist/antd.css";
@@ -28,6 +31,102 @@ const { Header, Content, Footer, Sider } = Layout;
 
 // This function generates the HTML output that defines the frontend page
 const App = () => {
+  // The following part of the code sets up the websockets connection
+  const endpoint = "ws_meetup"
+  const ws = useRef();
+  // Variable to store the websocket connection parameters
+  const [genieSettings, setGenieSettings] = useState({
+    server_host: "1.1.1.1",
+    server_port: 8000
+  });
+  // Once a connection is established, the value is `true`:
+  const [wsOpen, setWSOpen] = useState(false);
+  const getSettings = async () => {
+    const data = await fetch("/api/v1/getwssettings");
+    const response = await data.json();
+    setGenieSettings(response);
+  };
+  // Parse incoming messages as JSON - unless it is just a string, then just show it as message.
+  const parseJSON = (str) => {
+    try {
+      return JSON.parse(str);
+    } catch {
+      return { message: str };
+    }
+  };
+  // Main function that handles what to do based on the incoming dictionary. Use the keys to
+  // cause certain actions, and use the values to carry out the actions.
+  const parseMessage = (dict) => {
+    // console.log(dict);
+    Object.keys(dict).map((key) => {
+      switch (key) {
+        case "message":
+          displayMessage(dict.message);
+          break;
+        case "error":
+          displayError(dict.error);
+          break;
+        default:
+          break;
+      };
+      return undefined
+    }
+    )
+  };
+  const displayMessage = (msg) => {
+    message.info(msg, 5);
+  };
+  const displayError = (msg) => {
+    message.error(msg, 5);
+  };
+  // Function to send messages over the websocket in a simple way later.
+  const send = (message, payload) => {
+    ws.current.send(JSON.stringify({
+      'channel': endpoint,   // base URL
+      'message': message, // second part after /
+      'payload': payload // exposed as payload in Genie
+    }));
+  };
+  // Close the websocket connection in a proper way to avoid memory leaks.
+  const setupBeforeUnloadListener = () => {
+    window.addEventListener('beforeunload', (event) => {
+      console.log("Preparing to unload");
+      send("unsubscribe", "");
+      console.log('Cleaning up! 🧼');
+      ws.current.close();
+    });
+  };
+
+  // Update genieSettings one time when the component appears
+  useEffect(() => {
+    getSettings();
+  }, [])
+
+  // Rerun this every time genieSettings changes
+  useEffect(() => {
+    ws.current = new WebSocket("ws://" + genieSettings.server_host + ":" + genieSettings.server_port);
+
+    ws.current.onopen = () => {
+      send("subscribe", "")
+      console.log('Connection opened!');
+      setWSOpen(true);
+    };
+
+    ws.current.onmessage = (ev) => {
+      const message = parseJSON(ev.data);
+      parseMessage(message);
+    };
+
+    ws.current.onclose = () => {
+      // code for reconnecting
+    };
+
+    return () => { };
+  }, [genieSettings]
+  );
+
+  setupBeforeUnloadListener();
+
   const [selectedMenuItem, setSelectedMenuItem] = useState("Submit"); // `useState` defines
   // a new variable and a function for changing the variable. When this happens, any part of 
   // the frontend that uses this variable is automatically updated.
@@ -51,6 +150,18 @@ const App = () => {
             <FilterTable api={"/api/v1/view"} />
           </div>
         );
+      case "Websockets":
+        if (wsOpen) {
+          return (<div className="site-foreground"
+            style={{ width: 600, margin: "20px auto" }} >
+            <WebsocketDemo
+              ws={ws.current}
+              endpoint={endpoint} />
+          </div>
+          )
+        } else {
+          return (<></>)
+        };
       default:
         break;
     }
@@ -84,6 +195,12 @@ const App = () => {
           </Divider>
           <Menu.Item key="ViewSubmissions" icon={<PlaySquareOutlined />}>
             View Submissions
+          </Menu.Item>
+          <Divider orientation="left" style={{ color: "white" }}>
+            <GiftOutlined /> Extra
+          </Divider>
+          <Menu.Item key="Websockets" icon={<AlertOutlined />}>
+            Websocket Demo
           </Menu.Item>
         </Menu>
       </Sider>
