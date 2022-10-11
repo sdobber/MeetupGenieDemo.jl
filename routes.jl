@@ -1,11 +1,16 @@
 using Genie.Router
 using Genie.Renderer.Json
 using Genie.Requests
+using Genie.Assets
 
 using MeetupGenieDemo.Users
 using MeetupGenieDemo.Projects
 using MeetupGenieDemo.Submissions
 using MeetupGenieDemo.HelperFunctions
+
+
+# Routes
+# ------
 
 route("/") do
   serve_static_file("index.html")
@@ -51,4 +56,22 @@ route("/api/v1/view/getsubmissions") do
   table = Dict("dataSource" => get_datasource(submissions, users, projects),
     "columns" => get_columns(columns))
   return json(table)
+end
+
+
+# Websocket Config and Channels
+# -----------------------------
+
+# Initialization
+Genie.config.websockets_server = true   # Activate websockets
+Assets.channels_subscribe("ws_meetup")  # Open the ws_meetup channel for subscriptions 
+
+route("/api/v1/getwssettings") do
+  return json(genie_settings())
+end
+
+channel("ws_meetup/submitmessage") do
+  text = params(:payload)
+  msg = Dict("message" => text)
+  Genie.WebChannels.broadcast("ws_meetup", msg)
 end

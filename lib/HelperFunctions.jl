@@ -1,5 +1,26 @@
 module HelperFunctions
 
+using Genie
+
+"""
+    genie_settings()
+
+Returns the current Genie settings as dictionary.
+"""
+function genie_settings()
+    return Dict(:server_host => Genie.config.server_host,
+        :server_port => Genie.config.server_port)
+end
+
+"""
+    pure_json(dict)
+
+Converts the dictionary `dict` to a JSON string.
+"""
+pure_json = Genie.Renderer.Json.JSONParser.json  # shortcut to Genie's json function
+# Makes one's life easier when broadcasting dictionaries: 
+Genie.WebChannels.broadcast(ch, msg::Dict) = Genie.WebChannels.broadcast(ch, pure_json(msg))
+
 function dropdown_transform(arr)
     return [Dict("id" => el.id.value, "value" => el.name) for el in arr]
 end
@@ -28,6 +49,6 @@ function get_datasource(submissions, users, projects)
     return out
 end
 
-export dropdown_transform, get_columns, get_datasource
+export dropdown_transform, get_columns, get_datasource, genie_settings
 
 end
