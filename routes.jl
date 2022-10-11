@@ -41,3 +41,14 @@ route("/api/v1/submittext/filesubmit", method=POST) do
   result = Dict("Wordcount" => wordcount, "Submissiontext" => text)
   return json(result)
 end
+
+route("/api/v1/view/getsubmissions") do
+  users = all(User)
+  projects = all(Project)
+  submissions = all(Submission)
+  columns = ["User", "Project", "Comment", "Wordcount", "Text"]
+
+  table = Dict("dataSource" => get_datasource(submissions, users, projects),
+    "columns" => get_columns(columns))
+  return json(table)
+end
