@@ -18,6 +18,7 @@ import {
 
 // Import components
 import SubmitText from "./components/submittext";
+import FilterTable from "./components/filtertable";
 
 // Import CSS definitions
 import "antd/dist/antd.css";
@@ -45,9 +46,9 @@ const App = () => {
         return (
           <div
             className="site-foreground"
-            style={{ width: 800, margin: "20px auto" }}
+            style={{ width: 1000, margin: "20px auto" }}
           >
-            <>Component 2</>
+            <FilterTable api={"/api/v1/view"} />
           </div>
         );
       default:
