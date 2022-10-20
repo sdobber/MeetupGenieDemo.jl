@@ -3,8 +3,8 @@
 This repository contains a small frontend/server setup, prepared for the Julia Meetup in Copenhagen on the XX.XX.XXXX. We will create a simple webpage, where authors can submit a text written for a given project by file upload. We want to store the submission together with a word count.
 
 The following concepts will be demonstrated:
-* Creating a new Genie project
-* Creating a new React project
+* Creating a new [Genie](https://genieframework.com/) project
+* Creating a new [React](https://reactjs.org/) project
 * Building a webpage with dropdowns, textbox and file upload using [Ant Design](https://ant.design/) components.
 * Populating the dropdowns with data stored in a database.
 * Receiving the data, analysing and storing it.
@@ -14,6 +14,8 @@ As an advanced bonus section, we will also show how a websocket connection can b
 
 !!! tip Info
     Is is advisible to not only look at the final code, but also at the history contained in the git repository. Certain "Checkpoints" will be mentioned in this document, which correspond to tags in the repository. By checking out the tags and only looking at this specific code, it should be easier to follow along the different steps, and trace the changes needed to establish a certain functionality.
+
+The GitHub markdown renderer does not support all features of this document. Download and view the `README.html` or `README.pdf` file for correct display.
 
 
 ## Prerequisites
@@ -651,3 +653,10 @@ This channel takes the message from the frontend (contained in `params(:payload)
 * [Ant Design Mobile Components](https://mobile.ant.design/components/button) - similar to the previous framework, but with mobile devices as target.
 * [SQL Tutorial](https://www.w3schools.com/sql/) - rather slow paced, but when finished, one has a good grasp of the concepts.
 * Database Migrations: [Wiki entry](https://en.wikipedia.org/wiki/Schema_migration), [Article from one of the inventors of the concept](https://martinfowler.com/articles/evodb.html).
+
+
+## Errata & Deprecations
+
+The code used in the repository is based on React 16 and Ant Design 4.18. Some deprecations occured in the meantime:
+* With React 18, the mounting of the overall `App` component happens in a new way. See commit `e40a8f4` and the [React documentation](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#updates-to-client-rendering-apis).
+* Ant Design uses another syntax for menu items - see the [upgrade notes](https://ant.design/components/menu/#Usage-upgrade-after-4.20.0).
