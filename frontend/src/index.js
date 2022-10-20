@@ -6,7 +6,7 @@
 
 // Import basic definitions for React
 import React, { useState, useEffect, useRef } from "react";
-import { render } from "react-dom";
+import { createRoot } from 'react-dom/client';
 // Import components and icons from Ant Design
 import { Layout, Menu, Divider, Space, message } from "antd";
 import {
@@ -232,4 +232,6 @@ const App = () => {
 
 // This line puts the component defined in the function `App` into the root node of the 
 // webpage
-render(<App />, document.getElementById("root"));
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<App />);
