@@ -644,7 +644,10 @@ This channel takes the message from the frontend (contained in `params(:payload)
 
 ## Resources
 
+* [Genie Documentation](https://genieframework.com/docs/genie/v5.4/tutorials/Developing-MVC-Web-Apps.html)
 * [Introduction to React](https://reactjs.org/tutorial/tutorial.html)
 * [Create-React-App Docs](https://create-react-app.dev/docs/getting-started)
 * [Ant Design Components](https://ant.design/components/overview/) - use this for looking up which components are available, and what data format they expect.
 * [Ant Design Mobile Components](https://mobile.ant.design/components/button) - similar to the previous framework, but with mobile devices as target.
+* [SQL Tutorial](https://www.w3schools.com/sql/) - rather slow paced, but when finished, one has a good grasp of the concepts.
+* Database Migrations: [Wiki entry](https://en.wikipedia.org/wiki/Schema_migration), [Article from one of the inventors of the concept](https://martinfowler.com/articles/evodb.html).
