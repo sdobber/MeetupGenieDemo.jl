@@ -1,6 +1,8 @@
 # Meetup Genie Demo
 
-This repository contains a small frontend/server setup, prepared for the Julia Meetup in Copenhagen on the XX.XX.XXXX. We will create a simple webpage, where authors can submit a text written for a given project by file upload. We want to store the submission together with a word count.
+This repository contains a small frontend/server setup, prepared for the Julia Meetup in Copenhagen on the 08.02.2023. The presentation given during the Meetup can be found [here](https://docs.google.com/presentation/d/19YU8aeiv3zsewZRyaMPERpx51dd9rS6wjjdOLd-GMdI/edit?usp=sharing).
+
+We will create a simple webpage, where authors can submit a text written for a given project by file upload. We want to store the submission together with a word count.
 
 The following concepts will be demonstrated:
 * Creating a new [Genie](https://genieframework.com/) project
@@ -23,9 +25,6 @@ The GitHub markdown renderer does not support all features of this document. Dow
 ### Julia
 
 Install the latest version of Julia.
-
-!!! warning Warning
-    When using an M-series Mac, do not use the ARM version of Julia. One dependency of Genie is not compatible with it (yet). Instead, use the "Intel or Rosetta" version of Julia!
 
 Open Julia and type
 ```julia
